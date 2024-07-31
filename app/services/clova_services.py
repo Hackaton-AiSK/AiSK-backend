@@ -286,59 +286,58 @@ ________________
             "includeAiFilters": True,
             "seed": 0
         }
-        while True:
-            try:
-                response = completion_executor.execute(completion_request_data, stream=stream)
-                if stream:
-                    response_text = parse_stream_response(response)
-                else:
-                    response_text = parse_non_stream_response(response)
-                
-                messages.append({"role": "assistant", "content": response_text})
+        
+        try:
+            response = completion_executor.execute(completion_request_data, stream=stream)
+            if stream:
+                response_text = parse_stream_response(response)
+            else:
+                response_text = parse_non_stream_response(response)
+            
+            messages.append({"role": "assistant", "content": response_text})
 
-                # 대화 내역 표시
-                # print("\nAdjusted Messages:", adjusted_messages, "\n")
-                # print("System Prompt:", system_prompt)
-                print("USER Input:", transcription)
-                print("CLOVA Response:",response_text)
-                # split and remove empty strings
-                main_response = re.search(r"-\s*답변\s*:\s*(.+?)\n", response_text).group(1)
-                emotion_response = re.search(r"-\s*감정\s*:\s*(.+?)\n", response_text).group(1)
-                emotion_degree = re.search(r"-\s*정도\s*:\s*(.+?)\n", response_text).group(1)
-                menu_items = []
-                basket = {}
-                if re.search(r"-\s*고려\s*메뉴\s*:\s*\[(.+?)\]", response_text):
-                    menu_items = re.search(r"-\s*고려\s*메뉴\s*:\s*\[(.+?)\]", response_text).group(1).split(', ')
-                
-                if re.search(r"-\s*장바구니\s*:\s*\{(.+?)\}", response_text):
-                    basket_str = re.search(r"-\s*장바구니\s*:\s*\{(.+?)\}", response_text).group(1)
-                    # Manually parse the basket string
-                    basket_items = basket_str.split(', ')
-                    for item in basket_items:
-                        key, value = item.split(': ')
-                        key = key.strip()
-                        value = int(value.strip())
-                        basket[key] = value
+            # 대화 내역 표시
+            # print("\nAdjusted Messages:", adjusted_messages, "\n")
+            # print("System Prompt:", system_prompt)
+            print("USER Input:", transcription)
+            print("CLOVA Response:",response_text)
+            # split and remove empty strings
+            main_response = re.search(r"-\s*답변\s*:\s*(.+?)\n", response_text).group(1)
+            emotion_response = re.search(r"-\s*감정\s*:\s*(.+?)\n", response_text).group(1)
+            emotion_degree = re.search(r"-\s*정도\s*:\s*(.+?)\n", response_text).group(1)
+            menu_items = []
+            basket = {}
+            if re.search(r"-\s*고려\s*메뉴\s*:\s*\[(.+?)\]", response_text):
+                menu_items = re.search(r"-\s*고려\s*메뉴\s*:\s*\[(.+?)\]", response_text).group(1).split(', ')
+            
+            if re.search(r"-\s*장바구니\s*:\s*\{(.+?)\}", response_text):
+                basket_str = re.search(r"-\s*장바구니\s*:\s*\{(.+?)\}", response_text).group(1)
+                # Manually parse the basket string
+                basket_items = basket_str.split(', ')
+                for item in basket_items:
+                    key, value = item.split(': ')
+                    key = key.strip()
+                    value = int(value.strip())
+                    basket[key] = value
 
-                if "중립" in emotion_response:
-                    emotion = 0
-                elif "슬픔" in emotion_response:
-                    emotion = 1
-                elif "기쁨" in emotion_response:
-                    emotion = 2
-                elif "분노" in emotion_response:
-                    emotion = 3
-                if "약함" in emotion_degree:
-                    degree = 0
-                elif "보통" in emotion_degree:
-                    degree = 1
-                elif "강함" in emotion_degree:
-                    degree = 2
-                print("emotion: ", emotion, "degree: ", degree)
-                break
-            except:
-                raise Exception(f"Error during chat with LLM.")
-                continue
+            if "중립" in emotion_response:
+                emotion = 0
+            elif "슬픔" in emotion_response:
+                emotion = 1
+            elif "기쁨" in emotion_response:
+                emotion = 2
+            elif "분노" in emotion_response:
+                emotion = 3
+            if "약함" in emotion_degree:
+                degree = 0
+            elif "보통" in emotion_degree:
+                degree = 1
+            elif "강함" in emotion_degree:
+                degree = 2
+            print("emotion: ", emotion, "degree: ", degree)
+                
+        except:
+            raise Exception(f"Error during chat with LLM.")
         return main_response
     except Exception as e:
         raise Exception(f"Error during chat with LLM.")

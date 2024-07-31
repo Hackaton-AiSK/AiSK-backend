@@ -2,7 +2,10 @@ from pydantic import BaseModel
 
 class TranscriptionResponse(BaseModel):
     text: str
-
+    
+class InitialResponse(BaseModel):
+    menu_list: list
+    
 class LLMResponse(BaseModel):
     llm_text: str
     llm_audio_path: str

@@ -1,7 +1,7 @@
 import urllib.request
 from app.core.config import settings
 
-def make_tts( text, speaker="vdain", volume=0, speed=-1, pitch=2, 
+def make_tts( text, speaker="vyuna", volume=0, speed=-2, pitch=1, 
                 format="mp3", emotion=2, end_pitch=0, emotion_strength=1):
     encText = urllib.parse.quote(text)
     data = f"speaker={speaker}&volume={volume}&speed={speed}&pitch={pitch}&format={format}&emotion={emotion}&emotion-strength={emotion_strength}&end-pitch={end_pitch}&text={encText}"
