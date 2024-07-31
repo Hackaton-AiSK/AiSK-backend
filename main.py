@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.api.routes import router
-
+import uvicorn
 
 app = FastAPI()
 
@@ -14,3 +14,7 @@ async def add_cors_header(request, call_next):
     return response
 
 app.include_router(router)
+
+if __name__ == "__main__":
+
+    uvicorn.run("main:app", host="localhost", port=8000,reload=True)

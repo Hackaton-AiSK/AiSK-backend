@@ -5,7 +5,10 @@ class TranscriptionResponse(BaseModel):
 
 class LLMResponse(BaseModel):
     llm_text: str
-    llm_audio: str
-    menu_list: list
+    llm_audio_path: str
+    now_menu_list: list
+    basket: dict
     order_num: int
-    state: str
+    state: int
+    emotion: int
+    emotion_degree: int

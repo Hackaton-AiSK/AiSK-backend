@@ -13,4 +13,5 @@ class Settings:
     HYP_ID: str = os.getenv("HYP_ID")
     HYP_SECRET: str = os.getenv("HYP_SECRET")
     HYP_PRIMARY: str = os.getenv("HYP_PRIMARY")
+    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY")
 settings = Settings()
